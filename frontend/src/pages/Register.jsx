@@ -101,23 +101,23 @@ const handleRegister = async () => {
   }
  };
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black">
+    <div  className="min-h-screen bg-black flex justify-center py-8 px-4">
 
       <form
          onSubmit={(e) => {
             e.preventDefault();
             handleRegister();
          }}
-            className="w-[95%] max-w-md bg-white/10 backdrop-blur-lg p-6 md:p-8 rounded-3xl border border-white/10">
+            className="w-full max-w-[430px] bg-[#1a1a1d] backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl p-6">
 
         <Link
           to="/"
-          className="inline-block px-5 py-2 rounded-lg bg-purple-500/20 border border-purple-500 text-purple-300 transition-all duration-300 hover:bg-purple-500 hover:text-white hover:shadow-lg hover:shadow-purple-500/30"
+          className="inline-flex items-center px-4 py-2 rounded-lg border border-purple-500 bg-purple-500/20 text-purple-300 hover:bg-purple-600 hover:text-white transition"
         >
           ← Back
         </Link>
 
-        <h1 className="text-3xl font-bold text-white mt-4 mb-6">
+        <h1 className="text-4xl font-bold text-center text-white mt-5 mb-7">
           Create Account
         </h1>
         <div className="mb-4">
@@ -126,7 +126,7 @@ const handleRegister = async () => {
     placeholder="User ID"
     value={UserID}
     onChange={(e) => setUserID(e.target.value)}
-    className="w-full p-4 rounded-xl bg-black/30 text-white"
+    className="w-full h-12 px-4 rounded-xl bg-black/30 border border-white/10 text-white outline-none focus:border-purple-500 transition"
   />
 
   {errors.userId && (
@@ -141,7 +141,7 @@ const handleRegister = async () => {
     placeholder="Name"
     value={name}
     onChange={(e) => setName(e.target.value)}
-    className="w-full p-4 rounded-xl bg-black/30 text-white"
+    className="w-full h-12 px-4 rounded-xl bg-black/30 border border-white/10 text-white outline-none focus:border-purple-500 transition"
   />
 
   {errors.name && (
@@ -156,7 +156,7 @@ const handleRegister = async () => {
     placeholder="Email"
     value={email}
     onChange={(e) => setEmail(e.target.value)}
-    className="w-full p-4 rounded-xl bg-black/30 text-white"
+    className="w-full h-12 px-4 rounded-xl bg-black/30 border border-white/10 text-white outline-none focus:border-purple-500 transition"
   />
 
   {errors.email && (
@@ -170,7 +170,7 @@ const handleRegister = async () => {
     type="date"
     value={DateofBirth}
     onChange={(e) => setDateofBirth(e.target.value)}
-    className="w-full p-4 rounded-xl bg-black/30 text-white"
+    className="w-full h-12 px-4 rounded-xl bg-black/30 border border-white/10 text-white outline-none focus:border-purple-500 transition"
   />
 
   {errors.dob && (
@@ -185,7 +185,7 @@ const handleRegister = async () => {
     placeholder="Mobile Number"
     value={MobileNumber}
     onChange={(e) => setMobileNumber(e.target.value)}
-    className="w-full p-4 rounded-xl bg-black/30 text-white"
+    className="w-full h-12 px-4 rounded-xl bg-black/30 border border-white/10 text-white outline-none focus:border-purple-500 transition"
   />
 
   {errors.mobile && (
@@ -203,13 +203,13 @@ const handleRegister = async () => {
       placeholder="Password"
       value={password}
       onChange={(e) => setPassword(e.target.value)}
-      className="w-full p-4 rounded-xl bg-black/30 text-white"
+      className="w-full h-12 px-4 rounded-xl bg-black/30 border border-white/10 text-white outline-none focus:border-purple-500 transition"
     />
 
     <button
       type="button"
       onClick={() => setShowPassword(!showPassword)}
-      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
+      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-400 transition"
     >
       {showPassword ? <FaEyeSlash /> : <FaEye />}
     </button>
@@ -229,7 +229,7 @@ const handleRegister = async () => {
       placeholder="Confirm Password"
       value={confirmPassword}
       onChange={(e) => setConfirmPassword(e.target.value)}
-      className="w-full p-4 rounded-xl bg-black/30 text-white"
+      className="w-full h-12 px-4 rounded-xl bg-black/30 border border-white/10 text-white outline-none focus:border-purple-500 transition"
     />
 
     <button
@@ -237,7 +237,7 @@ const handleRegister = async () => {
       onClick={() =>
         setShowConfirmPassword(!showConfirmPassword)
       }
-      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
+      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-400 transition"
     >
       {showConfirmPassword ? (
         <FaEyeSlash />
@@ -253,11 +253,11 @@ const handleRegister = async () => {
     </p>
   )}
 </div>
-        <button  type="submit"  className="w-full bg-purple-600 py-4 rounded-xl text-white">
+        <button  type="submit"  className="w-full h-12 rounded-xl bg-purple-600 hover:bg-purple-700 transition text-white font-semibold">
          Register
         </button>
 
-        <p className="text-gray-400 text-center mt-5">
+        <p className="text-gray-400 text-center mt-6 text-sm">
           Already have an account?{" "}
           <Link
             to="/login"

@@ -64,23 +64,22 @@ const handleLogin = async () => {
   }
 };
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black">
+    <div className="min-h-screen bg-black flex items-center justify-center px-4 py-6">
 
       <form
         onSubmit={(e) => {
            e.preventDefault();
            handleLogin();
          }}
-        className="w-[95%] max-w-md bg-white/10 backdrop-blur-lg p-6 md:p-8 rounded-3xl border border-white/10">
+        className="w-full max-w-[420px] bg-[#1a1a1d] backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl p-6">
 
         <Link
            to="/"
-           className="inline-block px-5 py-2 rounded-lg bg-purple-500/20 border border-purple-500 text-purple-300 transition-all duration-300 hover:bg-purple-500 hover:text-white hover:shadow-lg hover:shadow-purple-500/30"
-           >
+           className="inline-flex items-center px-4 py-2 rounded-lg border border-purple-500 bg-purple-500/20 text-purple-300 hover:bg-purple-600 hover:text-white transition">
            ← Back
         </Link>
 
-        <h1 className="text-3xl font-bold text-white text-center mt-4 mb-6">
+        <h1 className="text-4xl font-bold text-center text-white mt-5 mb-7">
           Welcome Back
         </h1>
 
@@ -90,7 +89,7 @@ const handleLogin = async () => {
     placeholder="Email"
     value={email}
     onChange={(e) => setEmail(e.target.value)}
-    className="w-full p-4 rounded-xl bg-black/30 text-white"
+   className="w-full h-12 px-4 rounded-xl bg-black/30 border border-white/10 text-white focus:border-purple-500 outline-none"
   />
 
   {errors.email && (
@@ -107,7 +106,7 @@ const handleLogin = async () => {
       placeholder="Password"
       value={password}
       onChange={(e) => setPassword(e.target.value)}
-      className="w-full p-4 rounded-xl bg-black/30 text-white"
+      className="w-full h-12 px-4 rounded-xl bg-black/30 border border-white/10 text-white focus:border-purple-500 outline-none"
     />
 
     <button
@@ -135,7 +134,7 @@ const handleLogin = async () => {
           </Link>
         </div>
 
-        <button  type="submit"  className="w-full bg-purple-600 py-4 rounded-xl text-white">
+        <button  type="submit"  className="w-full h-12 rounded-xl bg-purple-600 hover:bg-purple-700 transition text-white font-semibold">
           Login
         </button>
         <div className="mt-6">
@@ -152,7 +151,7 @@ const handleLogin = async () => {
     <div className="grid grid-cols-2 gap-4">
 
     <div
-  className="flex items-center justify-center gap-3 border border-gray-600 rounded-xl py-3 cursor-pointer hover:bg-white/10"
+  className="flex items-center justify-center gap-3 h-12 border border-gray-600 rounded-xl cursor-pointer hover:bg-white/10 transition"
   onClick={() => {
     document.querySelector('[role="button"]')?.click();
   }}
@@ -200,7 +199,7 @@ const handleLogin = async () => {
 </div>
 
     <button
-      className="flex items-center justify-center gap-3 border border-gray-600 rounded-xl py-3 text-white hover:bg-white/10"
+      className="flex items-center justify-center gap-3 h-12 border border-gray-600 rounded-xl text-white hover:bg-white/10 transition"
     >
       <img
         src="/apple.png"
