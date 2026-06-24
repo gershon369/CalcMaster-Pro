@@ -6,7 +6,7 @@ export default function ProfileHeader() {
       <div className="flex items-center gap-4">
 
         <div className="w-12 h-12 rounded-full border-2 border-purple-500 flex items-center justify-center bg-purple-500/10 text-purple-300">
-          👤
+          
         </div>
 
         <div>

@@ -55,7 +55,7 @@ return (
           />
 
           <h1 className="text-xl md:text-3xl font-extrabold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
-            CalcMaster Pro
+            <span className="">Calc</span>Master Pro
           </h1>
         </div>
 
