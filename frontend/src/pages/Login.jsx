@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import API from "../services/API.js";
+import API from "../services/api.js";
 import { FaHome } from "react-icons/fa";
 import {
   FaCalculator,
