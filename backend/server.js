@@ -22,6 +22,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/loan", require("./routes/loanRoutes"));
 app.use("/api/admin", require("./routes/adminRoutes"));
+app.use("/api/premium", require("./routes/premiumRoutes"));
 
 // MongoDB and Server
 const PORT = process.env.PORT || 5000;

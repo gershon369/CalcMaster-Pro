@@ -8,7 +8,6 @@ import Footer from "../components/Footer";
 import Testimonials from "../components/Testimonials";
 import FAQ from "../components/FAQ";
 import MobileBottomNav from "../components/MobileBottomNav";
-import BottomNav from "../components/BottomNav";
 
 export default function Home() {
   return (
@@ -33,8 +32,6 @@ export default function Home() {
       <Pricing />
 
       <Footer />
-
-      <BottomNav />
 
     </div>
   );

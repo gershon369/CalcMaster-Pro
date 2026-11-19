@@ -30,10 +30,14 @@ exports.register = async (req, res) => {
       password: hashedPassword
     });
 
+    const safeUser = user.toObject();
+    delete safeUser.password;
+
     res.status(201).json({
-      message: "User Registered Successfully",
-      user
-    });
+    success: true,
+    message: "User Registered Successfully",
+    user: safeUser
+  });
 
   } catch (error) {
     res.status(500).json({
@@ -77,9 +81,13 @@ exports.login = async (req, res) => {
       }
     );
 
+    const safeUser = user.toObject();
+    delete safeUser.password;
+
     res.json({
+      success: true,
       token,
-      user
+     user: safeUser
     });
 
   } catch (error) {
@@ -192,9 +200,13 @@ exports.googleLogin = async (req, res) => {
       }
     );
 
-    res.json({
+    const safeUser = user.toObject();
+    delete safeUser.password;
+
+      res.json({
+      success: true,
       token,
-      user,
+      user: safeUser,
     });
 
   } catch (error) {
