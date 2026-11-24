@@ -73,7 +73,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-violet-400/15 bg-[#080b18]/85 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.25)]">
+    <nav className="relative lg:fixed lg:top-0 lg:left-0 lg:right-0 lg:z-50 border-b border-violet-400/15 bg-[#080b18]/85 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.25)]">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 md:px-8 py-4">
 
         {/* Logo */}

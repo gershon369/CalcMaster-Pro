@@ -1,5 +1,343 @@
+
 @import "tailwindcss";
 
 body {
   margin: 0;
+}
+
+/* =================================
+   ROYAL PURPLE BACKGROUND
+================================= */
+
+.home-animated-bg {
+  position: relative;
+  isolation: isolate;
+  background: linear-gradient(
+    135deg,
+    #0F0820,
+    #160B2E,
+    #090613,
+    #1B0D35
+  );
+  background-size: 300% 300%;
+  animation: royalBackground 18s ease infinite;
+}
+
+.home-bg-effects {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  perspective: 1000px;
+}
+
+/* =================================
+   FLOATING 3D CALCULATORS
+================================= */
+
+.floating-calculator {
+  position: absolute;
+  width: 78px;
+  padding: 7px;
+  border: 1px solid rgba(192, 132, 252, 0.45);
+  border-radius: 12px;
+
+  background: linear-gradient(
+    145deg,
+    #30165a,
+    #130a26
+  );
+
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.35),
+    0 0 22px rgba(168, 85, 247, 0.25),
+    inset 0 1px 2px rgba(255,255,255,0.2);
+
+  transform-style: preserve-3d;
+  opacity: 0.65;
+
+  animation: calculatorFloat 12s ease-in-out infinite;
+}
+
+/* Calculator Top */
+
+.calc-top {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.calc-top span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #c084fc;
+}
+
+/* Calculator Screen */
+
+.calc-screen {
+  padding: 7px 4px;
+  margin-bottom: 6px;
+  border-radius: 5px;
+
+  background: #0b0715;
+  color: #d8b4fe;
+
+  text-align: right;
+  font-size: 10px;
+  font-family: monospace;
+
+  box-shadow:
+    inset 0 0 8px rgba(168,85,247,0.3);
+}
+
+/* Calculator Buttons */
+
+.calc-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
+}
+
+.calc-buttons span {
+  display: grid;
+  place-items: center;
+
+  height: 11px;
+  border-radius: 3px;
+
+  background: rgba(196, 181, 253, 0.16);
+  color: #eee5ff;
+
+  font-size: 6px;
+}
+
+.calc-buttons .operator {
+  background: #7c3aed;
+  color: white;
+}
+
+/* =================================
+   DESKTOP CALCULATOR POSITIONS
+   Keep center area clear
+================================= */
+
+.calc-one {
+  top: 12%;
+  left: 3%;
+  animation-delay: -2s;
+}
+
+.calc-two {
+  top: 25%;
+  right: 3%;
+  animation-delay: -5s;
+}
+
+.calc-three {
+  top: 42%;
+  left: 4%;
+  animation-delay: -7s;
+}
+
+.calc-four {
+  top: 58%;
+  right: 4%;
+  animation-delay: -3s;
+}
+
+.calc-five {
+  top: 76%;
+  left: 3%;
+  animation-delay: -9s;
+}
+
+.calc-six {
+  top: 88%;
+  right: 4%;
+  animation-delay: -4s;
+}
+
+.calc-seven {
+  top: 8%;
+  right: 17%;
+  animation-delay: -6s;
+}
+
+.calc-eight {
+  top: 68%;
+  left: 16%;
+  animation-delay: -1s;
+}
+
+/* =================================
+   CALCULATOR FLOAT ANIMATION
+================================= */
+
+@keyframes calculatorFloat {
+  0%, 100% {
+    transform:
+      translate3d(0, 0, 0)
+      rotateX(8deg)
+      rotateY(-12deg)
+      rotateZ(-8deg);
+  }
+
+  50% {
+    transform:
+      translate3d(20px, -35px, 30px)
+      rotateX(-8deg)
+      rotateY(15deg)
+      rotateZ(8deg);
+  }
+}
+
+/* =================================
+   FLOATING MATHEMATICAL SYMBOLS
+================================= */
+
+.math-symbol {
+  position: absolute;
+
+  color: #c084fc;
+  font-size: 35px;
+  font-weight: 800;
+
+  opacity: 0.30;
+
+  text-shadow:
+    0 0 18px #9333ea;
+
+  animation: symbolFloat 9s ease-in-out infinite;
+}
+
+.symbol-one {
+  top: 18%;
+  left: 22%;
+}
+
+.symbol-two {
+  top: 38%;
+  right: 20%;
+  animation-delay: -2s;
+}
+
+.symbol-three {
+  top: 65%;
+  left: 10%;
+  animation-delay: -4s;
+}
+
+.symbol-four {
+  top: 85%;
+  right: 22%;
+  animation-delay: -6s;
+}
+
+.symbol-five {
+  top: 50%;
+  left: 5%;
+  animation-delay: -3s;
+}
+
+@keyframes symbolFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-25px) rotate(25deg);
+  }
+}
+
+/* =================================
+   KEEP WEBSITE CONTENT ABOVE EFFECTS
+================================= */
+
+.home-animated-bg > .relative {
+  position: relative;
+  z-index: 10;
+}
+
+/* =================================
+   MOBILE RESPONSIVE ANIMATION
+================================= */
+
+@media (max-width: 640px) {
+
+  .floating-calculator {
+    width: 58px;
+    padding: 5px;
+    opacity: 0.40;
+  }
+
+  .calc-one {
+    top: 12%;
+    left: 1%;
+  }
+
+  .calc-two {
+    top: 28%;
+    right: 1%;
+  }
+
+  .calc-three {
+    top: 45%;
+    left: 1%;
+  }
+
+  .calc-four {
+    top: 60%;
+    right: 1%;
+  }
+
+  .calc-five {
+    top: 76%;
+    left: 1%;
+  }
+
+  .calc-six {
+    top: 88%;
+    right: 1%;
+  }
+
+  .calc-seven {
+    top: 5%;
+    right: 2%;
+  }
+
+  .calc-eight {
+    top: 70%;
+    left: 2%;
+  }
+
+  .math-symbol {
+    font-size: 22px;
+    opacity: 0.25;
+  }
+}
+
+/* =================================
+   REDUCE MOTION ACCESSIBILITY
+================================= */
+
+@keyframes royalBackground {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .home-animated-bg,
+  .floating-calculator,
+  .math-symbol {
+    animation: none !important;
+  }
 }
