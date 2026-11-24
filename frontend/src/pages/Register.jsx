@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../services/api.js";
+
 import { FaHome } from "react-icons/fa";
 import {
   FaCalculator,
@@ -97,27 +98,40 @@ export default function Register() {
       navigate("/login");
     } catch (error) {
       setFormError(
-        error.response?.data?.message || "Registration failed. Please try again."
+        error.response?.data?.message ||
+          "Registration failed. Please try again."
       );
     } finally {
       setLoading(false);
     }
   };
 
+  const features = [
+    "Access useful calculation tools",
+    "Explore financial calculators",
+    "Enjoy a simple user experience",
+  ];
+
   return (
-    <div className="min-h-screen bg-[#080611] text-white flex items-center justify-center p-4 md:p-8">
+    <div className="min-h-screen bg-[#080611] text-white flex items-center justify-center p-4 md:p-6">
 
       <div className="w-full max-w-6xl grid md:grid-cols-2 overflow-hidden rounded-3xl border border-purple-500/20 shadow-2xl shadow-purple-950/40">
 
         {/* LEFT BRANDING SECTION */}
 
-        <div className="relative hidden md:flex flex-col justify-between overflow-hidden bg-gradient-to-br from-[#32106f] via-[#190b38] to-[#090612] p-12">
+        <div className="relative hidden md:flex flex-col justify-start overflow-hidden bg-gradient-to-br from-[#32106f] via-[#190b38] to-[#090612] p-10">
+
+          {/* Background Effects */}
 
           <div className="absolute -top-32 -left-32 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl" />
+
           <div className="absolute bottom-0 right-0 w-80 h-80 bg-violet-600/20 rounded-full blur-3xl" />
+
+          {/* Logo */}
 
           <div className="relative z-10">
             <Link to="/" className="flex items-center gap-3">
+
               <div className="w-12 h-12 rounded-xl bg-purple-500 flex items-center justify-center shadow-lg shadow-purple-500/30">
                 <FaCalculator className="text-2xl" />
               </div>
@@ -126,47 +140,75 @@ export default function Register() {
                 <h1 className="text-2xl font-bold">
                   CalcMaster <span className="text-purple-300">Pro</span>
                 </h1>
+
                 <p className="text-xs text-purple-200">
                   Smart Calculations. Smarter Decisions.
                 </p>
               </div>
+
             </Link>
           </div>
 
-          <div className="relative z-10 max-w-md">
-            <span className="inline-block px-4 py-2 rounded-full border border-purple-300/30 bg-purple-400/10 text-purple-200 text-sm mb-6">
+          {/* Main Content */}
+
+          <div className="relative z-10 max-w-md mt-12">
+
+            <span className="inline-block px-4 py-2 rounded-full border border-purple-300/30 bg-purple-400/10 text-purple-200 text-sm mb-5">
               Join CalcMaster Pro
             </span>
 
             <h2 className="text-4xl lg:text-5xl font-bold leading-tight">
               Start Your Journey
+
               <span className="block text-purple-300">
                 With Smarter Tools.
               </span>
             </h2>
 
-            <p className="text-gray-300 mt-6 leading-7">
+            <p className="text-gray-300 mt-5 leading-7">
               Create your account and explore powerful calculators
               and smart tools in one place.
             </p>
 
-            <div className="mt-10 space-y-5">
-              {[
-                "Access useful calculation tools",
-                "Explore financial calculators",
-                "Enjoy a simple user experience",
-              ].map((feature) => (
+            {/* Features */}
+
+            <div className="mt-7 space-y-4">
+
+              {features.map((feature) => (
                 <div key={feature} className="flex items-center gap-3">
-                  <FaCheckCircle className="text-purple-300" />
-                  <span className="text-gray-200">{feature}</span>
+
+                  <FaCheckCircle className="text-purple-300 shrink-0" />
+
+                  <span className="text-gray-200 text-sm">
+                    {feature}
+                  </span>
+
                 </div>
               ))}
+
             </div>
+
+            {/* Small Highlight */}
+
+            <div className="mt-8 p-4 rounded-2xl border border-purple-300/20 bg-purple-400/10">
+              <p className="text-purple-200 text-sm font-semibold">
+                Calculate Smarter. Work Faster.
+              </p>
+
+              <p className="text-gray-300 text-xs mt-2 leading-5">
+                Everything you need for everyday and financial
+                calculations in one place.
+              </p>
+            </div>
+
           </div>
 
-          <div className="relative z-10 text-sm text-purple-200/60">
+          {/* Footer */}
+
+          <div className="relative z-10 text-xs text-purple-200/60 mt-10">
             © 2026 CalcMaster Pro. All rights reserved.
           </div>
+
         </div>
 
         {/* RIGHT REGISTER SECTION */}
@@ -175,9 +217,12 @@ export default function Register() {
 
           <div className="w-full max-w-md">
 
-            {/* MOBILE LOGO */}
+            {/* Mobile Logo */}
 
-            <Link to="/" className="md:hidden flex items-center justify-center gap-3 mb-8">
+            <Link
+              to="/"
+              className="md:hidden flex items-center justify-center gap-3 mb-8"
+            >
               <div className="w-11 h-11 rounded-xl bg-purple-600 flex items-center justify-center">
                 <FaCalculator className="text-xl" />
               </div>
@@ -186,14 +231,21 @@ export default function Register() {
                 CalcMaster <span className="text-purple-400">Pro</span>
               </h1>
             </Link>
-<Link
-  to="/"
-  className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-xl border border-purple-500/30 bg-purple-500/10 text-purple-300 hover:bg-purple-600 hover:text-white transition"
->
-  <FaHome />
-  Back to Home
-</Link>
+
+            {/* Back Home */}
+
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-xl border border-purple-500/30 bg-purple-500/10 text-purple-300 hover:bg-purple-600 hover:text-white transition"
+            >
+              <FaHome />
+              Back to Home
+            </Link>
+
+            {/* Heading */}
+
             <div className="mb-7">
+
               <p className="text-purple-400 font-semibold text-sm tracking-widest uppercase">
                 Create Account
               </p>
@@ -205,7 +257,10 @@ export default function Register() {
               <p className="text-gray-400 mt-2">
                 Fill in your details to create your account.
               </p>
+
             </div>
+
+            {/* Error */}
 
             {formError && (
               <div className="mb-5 p-3 rounded-xl border border-red-500/30 bg-red-500/10 text-red-300 text-sm">
@@ -213,219 +268,193 @@ export default function Register() {
               </div>
             )}
 
-            <form onSubmit={handleRegister} className="space-y-4">
+            
+<form onSubmit={handleRegister} className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4">
 
-              {/* USER ID */}
+  {/* USER ID */}
+  <div>
+    <label className="block text-sm text-gray-300 mb-2">
+      User ID
+    </label>
+    <div className="relative">
+      <FaIdBadge className="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400" />
+      <input
+        type="text"
+        value={UserID}
+        onChange={(e) => setUserID(e.target.value)}
+        placeholder="Create User ID"
+        autoComplete="username"
+        className={inputClass}
+      />
+    </div>
+    {errors.userId && (
+      <p className="text-red-400 text-xs mt-1">{errors.userId}</p>
+    )}
+  </div>
 
-              <div>
-                <label className="block text-sm text-gray-300 mb-2">
-                  User ID
-                </label>
+  {/* FULL NAME */}
+  <div>
+    <label className="block text-sm text-gray-300 mb-2">
+      Full Name
+    </label>
+    <div className="relative">
+      <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400" />
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="Enter full name"
+        autoComplete="name"
+        className={inputClass}
+      />
+    </div>
+    {errors.name && (
+      <p className="text-red-400 text-xs mt-1">{errors.name}</p>
+    )}
+  </div>
 
-                <div className="relative">
-                  <FaIdBadge className="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400" />
+  {/* EMAIL */}
+  <div className="sm:col-span-2">
+    <label className="block text-sm text-gray-300 mb-2">
+      Email Address
+    </label>
+    <div className="relative">
+      <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400" />
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Enter your email"
+        autoComplete="email"
+        className={inputClass}
+      />
+    </div>
+    {errors.email && (
+      <p className="text-red-400 text-xs mt-1">{errors.email}</p>
+    )}
+  </div>
 
-                  <input
-                    type="text"
-                    value={UserID}
-                    onChange={(e) => setUserID(e.target.value)}
-                    placeholder="Create your User ID"
-                    autoComplete="username"
-                    className={inputClass}
-                  />
-                </div>
+  {/* DATE OF BIRTH */}
+  <div>
+    <label className="block text-sm text-gray-300 mb-2">
+      Date of Birth
+    </label>
+    <div className="relative">
+      <FaCalendarAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400 pointer-events-none" />
+      <input
+        type="date"
+        value={DateofBirth}
+        onChange={(e) => setDateofBirth(e.target.value)}
+        className={`${inputClass} [color-scheme:dark]`}
+      />
+    </div>
+    {errors.dob && (
+      <p className="text-red-400 text-xs mt-1">{errors.dob}</p>
+    )}
+  </div>
 
-                {errors.userId && (
-                  <p className="text-red-400 text-xs mt-1">{errors.userId}</p>
-                )}
-              </div>
+  {/* MOBILE NUMBER */}
+  <div>
+    <label className="block text-sm text-gray-300 mb-2">
+      Mobile Number
+    </label>
+    <div className="relative">
+      <FaPhone className="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400" />
+      <input
+        type="tel"
+        value={MobileNumber}
+        onChange={(e) =>
+          setMobileNumber(e.target.value.replace(/\D/g, "").slice(0, 10))
+        }
+        placeholder="10-digit mobile"
+        autoComplete="tel"
+        className={inputClass}
+      />
+    </div>
+    {errors.mobile && (
+      <p className="text-red-400 text-xs mt-1">{errors.mobile}</p>
+    )}
+  </div>
 
-              {/* NAME */}
+  {/* PASSWORD */}
+  <div>
+    <label className="block text-sm text-gray-300 mb-2">
+      Password
+    </label>
+    <div className="relative">
+      <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400" />
+      <input
+        type={showPassword ? "text" : "password"}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Create password"
+        autoComplete="new-password"
+        className={`${inputClass} pr-12`}
+      />
+      <button
+        type="button"
+        onClick={() => setShowPassword(!showPassword)}
+        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-400"
+        aria-label="Toggle password visibility"
+      >
+        {showPassword ? <FaEyeSlash /> : <FaEye />}
+      </button>
+    </div>
+    {errors.password && (
+      <p className="text-red-400 text-xs mt-1">{errors.password}</p>
+    )}
+  </div>
 
-              <div>
-                <label className="block text-sm text-gray-300 mb-2">
-                  Full Name
-                </label>
+  {/* CONFIRM PASSWORD */}
+  <div>
+    <label className="block text-sm text-gray-300 mb-2">
+      Confirm Password
+    </label>
+    <div className="relative">
+      <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400" />
+      <input
+        type={showConfirmPassword ? "text" : "password"}
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
+        placeholder="Confirm password"
+        autoComplete="new-password"
+        className={`${inputClass} pr-12`}
+      />
+      <button
+        type="button"
+        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-400"
+        aria-label="Toggle confirm password visibility"
+      >
+        {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+      </button>
+    </div>
+    {errors.confirmPassword && (
+      <p className="text-red-400 text-xs mt-1">
+        {errors.confirmPassword}
+      </p>
+    )}
+  </div>
 
-                <div className="relative">
-                  <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400" />
+  {/* CREATE ACCOUNT */}
+  <div className="sm:col-span-2">
+    <button
+      type="submit"
+      disabled={loading}
+      className="w-full h-12 rounded-xl bg-gradient-to-r from-purple-700 to-violet-500 hover:from-purple-600 hover:to-violet-400 transition text-white font-semibold shadow-lg shadow-purple-900/30 disabled:opacity-60"
+    >
+      {loading ? "Creating Account..." : "Create Account"}
+    </button>
+  </div>
 
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Enter your full name"
-                    autoComplete="name"
-                    className={inputClass}
-                  />
-                </div>
+</form>
 
-                {errors.name && (
-                  <p className="text-red-400 text-xs mt-1">{errors.name}</p>
-                )}
-              </div>
 
-              {/* EMAIL */}
-
-              <div>
-                <label className="block text-sm text-gray-300 mb-2">
-                  Email Address
-                </label>
-
-                <div className="relative">
-                  <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400" />
-
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    autoComplete="email"
-                    className={inputClass}
-                  />
-                </div>
-
-                {errors.email && (
-                  <p className="text-red-400 text-xs mt-1">{errors.email}</p>
-                )}
-              </div>
-
-              {/* DATE OF BIRTH */}
-
-              <div>
-                <label className="block text-sm text-gray-300 mb-2">
-                  Date of Birth
-                </label>
-
-                <div className="relative">
-                  <FaCalendarAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400 pointer-events-none" />
-
-                  <input
-                    type="date"
-                    value={DateofBirth}
-                    onChange={(e) => setDateofBirth(e.target.value)}
-                    className={`${inputClass} [color-scheme:dark]`}
-                  />
-                </div>
-
-                {errors.dob && (
-                  <p className="text-red-400 text-xs mt-1">{errors.dob}</p>
-                )}
-              </div>
-
-              {/* MOBILE NUMBER */}
-
-              <div>
-                <label className="block text-sm text-gray-300 mb-2">
-                  Mobile Number
-                </label>
-
-                <div className="relative">
-                  <FaPhone className="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400" />
-
-                  <input
-                    type="tel"
-                    value={MobileNumber}
-                    onChange={(e) =>
-                      setMobileNumber(e.target.value.replace(/\D/g, "").slice(0, 10))
-                    }
-                    placeholder="Enter 10-digit mobile number"
-                    autoComplete="tel"
-                    className={inputClass}
-                  />
-                </div>
-
-                {errors.mobile && (
-                  <p className="text-red-400 text-xs mt-1">{errors.mobile}</p>
-                )}
-              </div>
-
-              {/* PASSWORD */}
-
-              <div>
-                <label className="block text-sm text-gray-300 mb-2">
-                  Password
-                </label>
-
-                <div className="relative">
-                  <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400" />
-
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Create a password"
-                    autoComplete="new-password"
-                    className={`${inputClass} pr-12`}
-                  />
-
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-400"
-                    aria-label="Toggle password visibility"
-                  >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
-                  </button>
-                </div>
-
-                {errors.password && (
-                  <p className="text-red-400 text-xs mt-1">{errors.password}</p>
-                )}
-              </div>
-
-              {/* CONFIRM PASSWORD */}
-
-              <div>
-                <label className="block text-sm text-gray-300 mb-2">
-                  Confirm Password
-                </label>
-
-                <div className="relative">
-                  <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400" />
-
-                  <input
-                    type={showConfirmPassword ? "text" : "password"}
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Confirm your password"
-                    autoComplete="new-password"
-                    className={`${inputClass} pr-12`}
-                  />
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setShowConfirmPassword(!showConfirmPassword)
-                    }
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-400"
-                    aria-label="Toggle confirm password visibility"
-                  >
-                    {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-                  </button>
-                </div>
-
-                {errors.confirmPassword && (
-                  <p className="text-red-400 text-xs mt-1">
-                    {errors.confirmPassword}
-                  </p>
-                )}
-              </div>
-
-              {/* REGISTER BUTTON */}
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full h-12 rounded-xl bg-gradient-to-r from-purple-700 to-violet-500 hover:from-purple-600 hover:to-violet-400 transition text-white font-semibold shadow-lg shadow-purple-900/30 disabled:opacity-60"
-              >
-                {loading ? "Creating Account..." : "Create Account"}
-              </button>
-
-            </form>
+            {/* SIGN IN */}
 
             <p className="text-gray-400 text-center mt-7 text-sm">
               Already have an account?{" "}
+
               <Link
                 to="/login"
                 className="text-purple-400 font-semibold hover:text-purple-300"
@@ -440,6 +469,7 @@ export default function Register() {
 
           </div>
         </div>
+
       </div>
     </div>
   );

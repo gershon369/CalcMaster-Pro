@@ -23,6 +23,7 @@ app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/loan", require("./routes/loanRoutes"));
 app.use("/api/admin", require("./routes/adminRoutes"));
 app.use("/api/premium", require("./routes/premiumRoutes"));
+app.use("/api/chats", require("./routes/chatRoutes"));
 
 // MongoDB and Server
 const PORT = process.env.PORT || 5000;

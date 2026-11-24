@@ -1,8 +1,21 @@
 
 @import "tailwindcss";
 
+/* =================================
+   GLOBAL SETTINGS
+================================= */
+
 body {
   margin: 0;
+}
+
+/* =================================
+   SMOOTH NAVBAR SCROLLING
+================================= */
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
 }
 
 /* =================================
@@ -121,7 +134,6 @@ body {
 
 /* =================================
    DESKTOP CALCULATOR POSITIONS
-   Keep center area clear
 ================================= */
 
 .calc-one {
@@ -320,7 +332,7 @@ body {
 }
 
 /* =================================
-   REDUCE MOTION ACCESSIBILITY
+   ROYAL BACKGROUND ANIMATION
 ================================= */
 
 @keyframes royalBackground {
@@ -333,7 +345,15 @@ body {
   }
 }
 
+/* =================================
+   REDUCE MOTION ACCESSIBILITY
+================================= */
+
 @media (prefers-reduced-motion: reduce) {
+
+  html {
+    scroll-behavior: auto;
+  }
 
   .home-animated-bg,
   .floating-calculator,
