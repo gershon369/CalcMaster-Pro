@@ -1,3 +1,4 @@
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
@@ -9,8 +10,12 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
-import ProtectedRoute from "./components/ProtectedRoute";
 import Calculators from "./pages/Calculators";
+import CalculationHistory from "./pages/CalculationHistory";
+
+import ProtectedRoute from "./components/ProtectedRoute";
+import DashboardSidebar from "./components/DashboardSidebar";
+import AIChat from "./components/AIChat";
 
 // Calculator Pages
 import BasicCalculator from "./pages/BasicCalculator";
@@ -22,81 +27,159 @@ import SIPCalculator from "./pages/SIPCalculator";
 import CryptoCalculator from "./pages/CryptoCalculator";
 import RetirementCalculator from "./pages/RetirementCalculator";
 
+// =====================================
+// GLOBAL APP LAYOUT
+// =====================================
+
+function AppLayout({ children }) {
+  return (
+    <div className="flex h-dvh w-full overflow-hidden bg-[#080611] text-white">
+
+      {/* FIXED GLOBAL SIDEBAR */}
+      <DashboardSidebar />
+
+      {/* RIGHT CONTENT AREA */}
+      <main
+        className="
+          ml-64
+          flex h-dvh min-w-0 flex-1
+          flex-col
+          overflow-y-auto overflow-x-hidden
+          hide-scrollbar
+          bg-[#080611]
+        "
+      >
+        {children}
+      </main>
+
+    </div>
+  );
+}
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
 
+        {/* PUBLIC PAGES */}
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/settings" element={<Settings />} />
-
-        {/* Basic Calculator */}
-        <Route
-          path="/calculator/basic"
-          element={<BasicCalculator />}
-        />
-
-        {/* Scientific Calculator */}
-        <Route
-          path="/calculator/scientific"
-          element={<ScientificCalculator />}
-        />
-
-        {/* Loan EMI Calculator */}
-        <Route
-          path="/calculator/loan-emi"
-          element={<LoanEMICalculator />}
-        />
-        {/* BMI Calculator */}
-        <Route
-          path="/calculator/bmi"
-          element={<BMICalculator />}
-        />
-        {/* GST Calculator */}
-        <Route
-          path="/calculator/gst"
-          element={<GSTCalculator />}
-        />
-        {/* SIP Calculator */}
-        <Route
-          path="/calculator/sip"
-          element={<SIPCalculator />}
-        />
-        {/* Crypto Calculator */}
-        <Route
-          path="/calculator/crypto"
-          element={<CryptoCalculator />}
-        />
-        {/* Retirement Calculator */}
-        <Route
-          path="/calculator/retirement"
-          element={<RetirementCalculator />}
-        />  
-        {/* User Dashboard Enter */} 
-        <Route
-           path="/calculators"
-           element={
-           <ProtectedRoute>
-             <Calculators  />
-          </ProtectedRoute>
-          }
-        /> 
-        {/* User Dashboard Protected */}
+        {/* DASHBOARD */}
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
+            <AppLayout>
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            </AppLayout>
           }
         />
 
-        {/* Admin Dashboard Protected */}
+        {/* CALCULATOR DIRECTORY */}
+        <Route
+          path="/calculators"
+          element={
+            <AppLayout>
+              <ProtectedRoute>
+                <Calculators />
+              </ProtectedRoute>
+            </AppLayout>
+          }
+        />
+
+        {/* CALCULATOR PAGES */}
+        <Route
+          path="/calculator/basic"
+          element={<AppLayout><BasicCalculator /></AppLayout>}
+        />
+
+        <Route
+          path="/calculator/scientific"
+          element={<AppLayout><ScientificCalculator /></AppLayout>}
+        />
+
+        <Route
+          path="/calculator/loan-emi"
+          element={<AppLayout><LoanEMICalculator /></AppLayout>}
+        />
+
+        <Route
+          path="/calculator/bmi"
+          element={<AppLayout><BMICalculator /></AppLayout>}
+        />
+
+        <Route
+          path="/calculator/gst"
+          element={<AppLayout><GSTCalculator /></AppLayout>}
+        />
+
+        <Route
+          path="/calculator/sip"
+          element={<AppLayout><SIPCalculator /></AppLayout>}
+        />
+
+        <Route
+          path="/calculator/crypto"
+          element={<AppLayout><CryptoCalculator /></AppLayout>}
+        />
+
+        <Route
+          path="/calculator/retirement"
+          element={<AppLayout><RetirementCalculator /></AppLayout>}
+        />
+
+        {/* AI ASSISTANT */}
+        <Route
+          path="/ai"
+          element={
+            <AppLayout>
+              <ProtectedRoute>
+                <AIChat />
+              </ProtectedRoute>
+            </AppLayout>
+          }
+        />
+        {/* CALCULATION HISTORY */}
+<Route
+  path="/calculation-history"
+  element={
+    <AppLayout>
+      <ProtectedRoute>
+        <CalculationHistory />
+      </ProtectedRoute>
+    </AppLayout>
+  }
+/>
+        {/* PROFILE */}
+        <Route
+          path="/profile"
+          element={
+            <AppLayout>
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            </AppLayout>
+          }
+        />
+
+        {/* SETTINGS */}
+        <Route
+          path="/settings"
+          element={
+            <AppLayout>
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            </AppLayout>
+          }
+        />
+
+        {/* ADMIN */}
         <Route
           path="/admin"
           element={
@@ -106,15 +189,6 @@ function App() {
           }
         />
 
-        <Route
-          path="/forgot-password"
-          element={<ForgotPassword />}
-        />
-
-        <Route
-          path="/reset-password"
-          element={<ResetPassword />}
-        />
       </Routes>
     </BrowserRouter>
   );

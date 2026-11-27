@@ -1,6 +1,7 @@
 
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { saveCalculation } from "../utils/saveCalculation";
 
 const coins = [
   { symbol: "BTC", name: "Bitcoin", icon: "₿" },
@@ -103,36 +104,78 @@ function ResultCard({ title, value, description, color = "purple" }) {
 export default function CryptoCalculator() {
   const [values, setValues] = useState(initialValues);
   const [activeTab, setActiveTab] = useState("converter");
+  const [historyMessage, setHistoryMessage] = useState("");
 
   const update = (key, value) => {
     setValues((prev) => ({ ...prev, [key]: value }));
+    setHistoryMessage("");
   };
 
-  const amount = Math.max(0, Number(values.amount) || 0);
-  const buyPrice = Math.max(0, Number(values.buyPrice) || 0);
-  const sellPrice = Math.max(0, Number(values.sellPrice) || 0);
-  const currentPrice = Math.max(0, Number(values.currentPrice) || 0);
-  const feeRate = Math.min(100, Math.max(0, Number(values.fee) || 0));
-  const investment = Math.max(0, Number(values.investment) || 0);
+  const amount = Number(values.amount);
+  const buyPrice = Number(values.buyPrice);
+  const sellPrice = Number(values.sellPrice);
+  const currentPrice = Number(values.currentPrice);
+  const feeRate = Number(values.fee);
+  const investment = Number(values.investment);
+
+  const validAmount =
+    values.amount.trim() !== "" &&
+    Number.isFinite(amount) &&
+    amount > 0;
+
+  const validBuyPrice =
+    values.buyPrice.trim() !== "" &&
+    Number.isFinite(buyPrice) &&
+    buyPrice >= 0;
+
+  const validSellPrice =
+    values.sellPrice.trim() !== "" &&
+    Number.isFinite(sellPrice) &&
+    sellPrice >= 0;
+
+  const validCurrentPrice =
+    values.currentPrice.trim() !== "" &&
+    Number.isFinite(currentPrice) &&
+    currentPrice > 0;
+
+  const validFee =
+    values.fee.trim() !== "" &&
+    Number.isFinite(feeRate) &&
+    feeRate >= 0 &&
+    feeRate <= 100;
+
+  const validInvestment =
+    values.investment.trim() !== "" &&
+    Number.isFinite(investment) &&
+    investment >= 0;
+
+  const safeAmount = validAmount ? amount : 0;
+  const safeBuyPrice = validBuyPrice ? buyPrice : 0;
+  const safeSellPrice = validSellPrice ? sellPrice : 0;
+  const safeCurrentPrice = validCurrentPrice ? currentPrice : 0;
+  const safeFeeRate = validFee ? feeRate : 0;
+  const safeInvestment = validInvestment ? investment : 0;
 
   const results = useMemo(() => {
-    const buyValue = amount * buyPrice;
-    const buyFee = (buyValue * feeRate) / 100;
+    const buyValue = safeAmount * safeBuyPrice;
+    const buyFee = (buyValue * safeFeeRate) / 100;
     const totalCost = buyValue + buyFee;
 
-    const sellValue = amount * sellPrice;
-    const sellFee = (sellValue * feeRate) / 100;
+    const sellValue = safeAmount * safeSellPrice;
+    const sellFee = (sellValue * safeFeeRate) / 100;
     const netSellValue = sellValue - sellFee;
 
     const profitLoss = netSellValue - totalCost;
     const profitPercent =
       totalCost > 0 ? (profitLoss / totalCost) * 100 : 0;
 
-    const currentValue = amount * currentPrice;
-    const currentFee = (currentValue * feeRate) / 100;
+    const currentValue = safeAmount * safeCurrentPrice;
+    const currentFee = (currentValue * safeFeeRate) / 100;
 
     const cryptoQuantity =
-      currentPrice > 0 ? investment / currentPrice : 0;
+      safeCurrentPrice > 0
+        ? safeInvestment / safeCurrentPrice
+        : 0;
 
     return {
       buyValue,
@@ -148,17 +191,18 @@ export default function CryptoCalculator() {
       cryptoQuantity,
     };
   }, [
-    amount,
-    buyPrice,
-    sellPrice,
-    currentPrice,
-    feeRate,
-    investment,
+    safeAmount,
+    safeBuyPrice,
+    safeSellPrice,
+    safeCurrentPrice,
+    safeFeeRate,
+    safeInvestment,
   ]);
 
   const resetCalculator = () => {
     setValues(initialValues);
     setActiveTab("converter");
+    setHistoryMessage("");
   };
 
   const selectedCoin =
@@ -170,6 +214,94 @@ export default function CryptoCalculator() {
     { id: "fees", label: "Trading Fees", icon: "💳" },
     { id: "portfolio", label: "Portfolio", icon: "💼" },
   ];
+
+  const getHistoryData = () => {
+    const coin = values.coin;
+
+    if (activeTab === "converter") {
+      if (!validInvestment || !validCurrentPrice) return null;
+
+      return {
+        expression:
+          `Converter | ${coin} | ` +
+          `Investment: ${money(investment)} | ` +
+          `Coin Price: ${money(currentPrice)}`,
+        result: `${number(results.cryptoQuantity)} ${coin}`,
+      };
+    }
+
+    if (activeTab === "profit") {
+      if (
+        !validAmount ||
+        !validBuyPrice ||
+        !validSellPrice ||
+        !validFee
+      ) {
+        return null;
+      }
+
+      return {
+        expression:
+          `Profit/Loss | ${coin} | ` +
+          `Quantity: ${number(amount)} | ` +
+          `Buy: ${money(buyPrice)} | ` +
+          `Sell: ${money(sellPrice)} | ` +
+          `Fee: ${feeRate}%`,
+        result:
+          `${results.profitLoss >= 0 ? "Profit: " : "Loss: "}` +
+          money(Math.abs(results.profitLoss)),
+      };
+    }
+
+    if (activeTab === "fees") {
+      if (!validAmount || !validCurrentPrice || !validFee) {
+        return null;
+      }
+
+      return {
+        expression:
+          `Trading Fees | ${coin} | ` +
+          `Quantity: ${number(amount)} | ` +
+          `Price: ${money(currentPrice)} | ` +
+          `Fee: ${feeRate}%`,
+        result: money(results.currentFee),
+      };
+    }
+
+    if (activeTab === "portfolio") {
+      if (!validAmount || !validCurrentPrice || !validBuyPrice) {
+        return null;
+      }
+
+      return {
+        expression:
+          `Portfolio | ${coin} | ` +
+          `Quantity: ${number(amount)} | ` +
+          `Buy Price: ${money(buyPrice)} | ` +
+          `Current Price: ${money(currentPrice)}`,
+        result: money(results.currentValue),
+      };
+    }
+
+    return null;
+  };
+
+  const handleSaveHistory = () => {
+    const historyData = getHistoryData();
+
+    if (!historyData) {
+      setHistoryMessage("Please enter valid values before saving.");
+      return;
+    }
+
+    saveCalculation(
+      "Crypto Calculator",
+      historyData.expression,
+      historyData.result
+    );
+
+    setHistoryMessage("Calculation saved to history successfully!");
+  };
 
   return (
     <div className="min-h-screen bg-[#070816] text-white">
@@ -247,6 +379,7 @@ export default function CryptoCalculator() {
                     coin: coin.symbol,
                     currentPrice: String(samplePrices[coin.symbol]),
                   }));
+                  setHistoryMessage("");
                 }}
                 className={`rounded-xl border px-4 py-3 text-sm font-semibold transition ${
                   values.coin === coin.symbol
@@ -270,7 +403,10 @@ export default function CryptoCalculator() {
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => {
+                setActiveTab(tab.id);
+                setHistoryMessage("");
+              }}
               className={`rounded-xl px-3 py-3 text-sm font-semibold transition ${
                 activeTab === tab.id
                   ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg"
@@ -315,7 +451,9 @@ export default function CryptoCalculator() {
                   Estimated Crypto Quantity
                 </p>
                 <h3 className="mt-2 break-all text-3xl font-black text-purple-300">
-                  {number(results.cryptoQuantity)} {values.coin}
+                  {validCurrentPrice && validInvestment
+                    ? `${number(results.cryptoQuantity)} ${values.coin}`
+                    : "—"}
                 </h3>
               </div>
             </div>
@@ -323,24 +461,32 @@ export default function CryptoCalculator() {
             <div className="grid gap-4 sm:grid-cols-2">
               <ResultCard
                 title="Investment"
-                value={money(investment)}
+                value={validInvestment ? money(investment) : "—"}
                 description="Your entered INR amount"
                 color="blue"
               />
               <ResultCard
                 title="Coin Price"
-                value={money(currentPrice)}
+                value={validCurrentPrice ? money(currentPrice) : "—"}
                 description={`Price of 1 ${values.coin}`}
               />
               <ResultCard
                 title="Crypto Quantity"
-                value={number(results.cryptoQuantity)}
+                value={
+                  validCurrentPrice && validInvestment
+                    ? number(results.cryptoQuantity)
+                    : "—"
+                }
                 description={`Estimated ${values.coin} quantity`}
                 color="green"
               />
               <ResultCard
                 title="Estimated Value"
-                value={money(results.cryptoQuantity * currentPrice)}
+                value={
+                  validCurrentPrice && validInvestment
+                    ? money(results.cryptoQuantity * currentPrice)
+                    : "—"
+                }
                 description="Before any additional charges"
                 color="purple"
               />
@@ -393,22 +539,30 @@ export default function CryptoCalculator() {
             <div className="space-y-4">
               <ResultCard
                 title="Total Buy Cost (Including Fee)"
-                value={money(results.totalCost)}
+                value={validAmount && validBuyPrice && validFee ? money(results.totalCost) : "—"}
                 description={`Buy value: ${money(results.buyValue)} + Fee: ${money(results.buyFee)}`}
                 color="blue"
               />
 
               <ResultCard
                 title="Net Selling Amount"
-                value={money(results.netSellValue)}
+                value={validAmount && validSellPrice && validFee ? money(results.netSellValue) : "—"}
                 description={`Sell value: ${money(results.sellValue)} - Fee: ${money(results.sellFee)}`}
                 color="purple"
               />
 
               <ResultCard
                 title={results.profitLoss >= 0 ? "Estimated Profit" : "Estimated Loss"}
-                value={`${results.profitLoss < 0 ? "-" : "+"}${money(Math.abs(results.profitLoss))}`}
-                description={`${results.profitPercent.toFixed(2)}%`}
+                value={
+                  validAmount && validBuyPrice && validSellPrice && validFee
+                    ? `${results.profitLoss < 0 ? "-" : "+"}${money(Math.abs(results.profitLoss))}`
+                    : "—"
+                }
+                description={
+                  validAmount && validBuyPrice && validSellPrice && validFee
+                    ? `${results.profitPercent.toFixed(2)}%`
+                    : "Enter valid values"
+                }
                 color={results.profitLoss >= 0 ? "green" : "red"}
               />
             </div>
@@ -453,21 +607,21 @@ export default function CryptoCalculator() {
             <div className="space-y-4">
               <ResultCard
                 title="Transaction Value"
-                value={money(results.currentValue)}
+                value={validAmount && validCurrentPrice ? money(results.currentValue) : "—"}
                 description="Quantity × coin price"
                 color="blue"
               />
 
               <ResultCard
                 title="Estimated Trading Fee"
-                value={money(results.currentFee)}
-                description={`${feeRate.toFixed(2)}% of transaction value`}
+                value={validAmount && validCurrentPrice && validFee ? money(results.currentFee) : "—"}
+                description={`${safeFeeRate.toFixed(2)}% of transaction value`}
                 color="purple"
               />
 
               <ResultCard
                 title="Amount After Fee"
-                value={money(results.currentValue - results.currentFee)}
+                value={validAmount && validCurrentPrice && validFee ? money(results.currentValue - results.currentFee) : "—"}
                 description="Estimated amount after deducting fee"
                 color="green"
               />
@@ -513,21 +667,25 @@ export default function CryptoCalculator() {
             <div className="space-y-4">
               <ResultCard
                 title="Current Portfolio Value"
-                value={money(results.currentValue)}
-                description={`${number(amount)} ${values.coin} × ${money(currentPrice)}`}
+                value={validAmount && validCurrentPrice ? money(results.currentValue) : "—"}
+                description={`${number(safeAmount)} ${values.coin} × ${money(safeCurrentPrice)}`}
                 color="blue"
               />
 
               <ResultCard
                 title="Original Purchase Value"
-                value={money(results.buyValue)}
+                value={validAmount && validBuyPrice ? money(results.buyValue) : "—"}
                 description="Quantity × original buy price"
                 color="purple"
               />
 
               <ResultCard
                 title="Estimated Change"
-                value={`${results.currentValue - results.buyValue < 0 ? "-" : "+"}${money(Math.abs(results.currentValue - results.buyValue))}`}
+                value={
+                  validAmount && validCurrentPrice && validBuyPrice
+                    ? `${results.currentValue - results.buyValue < 0 ? "-" : "+"}${money(Math.abs(results.currentValue - results.buyValue))}`
+                    : "—"
+                }
                 description={
                   results.currentValue >= results.buyValue
                     ? "Value is above the original purchase value"
@@ -542,6 +700,42 @@ export default function CryptoCalculator() {
             </div>
           </div>
         )}
+
+        {/* Save to History */}
+        <div className="mt-8 rounded-2xl border border-purple-500/20 bg-purple-500/5 p-5">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h3 className="font-bold text-purple-300">
+                Save Calculation
+              </h3>
+              <p className="mt-1 text-xs text-slate-400">
+                Save your current {tabs.find((tab) => tab.id === activeTab)?.label} result to Calculation History.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleSaveHistory}
+              disabled={!getHistoryData()}
+              className="rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              📚 Save to History
+            </button>
+          </div>
+
+          {historyMessage && (
+            <p
+              className={`mt-3 text-sm ${
+                historyMessage.includes("successfully")
+                  ? "text-emerald-400"
+                  : "text-red-400"
+              }`}
+              role="status"
+            >
+              {historyMessage}
+            </p>
+          )}
+        </div>
 
         {/* Disclaimer */}
         <div className="mt-10 rounded-2xl border border-white/10 bg-white/[0.025] p-5">

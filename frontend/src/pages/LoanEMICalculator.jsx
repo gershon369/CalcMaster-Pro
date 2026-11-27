@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { saveCalculation } from "../utils/saveCalculation";
 
 const currency = new Intl.NumberFormat("en-IN", {
   style: "currency",
@@ -93,6 +94,18 @@ export default function LoanEMICalculator() {
 
       balance = closingBalance;
     }
+
+    // Save successful calculation to history.
+    const expression =
+      `Loan ₹${principal.toLocaleString("en-IN")} | ` +
+      `${annualRate}% annual interest | ` +
+      `${tenure} ${tenureUnit} (${months} months)`;
+
+    saveCalculation(
+      "Loan EMI Calculator",
+      expression,
+      currency.format(emi)
+    );
 
     setResult({
       emi,

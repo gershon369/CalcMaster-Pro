@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { saveCalculation } from "../utils/saveCalculation";
 
 // Convert scientific expression into tokens.
 function tokenize(source) {
@@ -371,20 +372,36 @@ export default function ScientificCalculator() {
     setError("");
   };
 
-  const calculate = () => {
-    try {
-      const result = currentValue();
+  
+const calculate = () => {
+  try {
+    const expression = input.trim();
 
-      const formatted = formatNumber(result);
+    if (!expression || expression === "Error") return;
 
-      setInput(formatted);
-      setLastAnswer(result);
-      setError("");
-    } catch (err) {
-      setInput("Error");
-      setError(err.message || "Calculation error");
-    }
-  };
+    const result = evaluateScientificExpression(
+      expression,
+      angleMode
+    );
+
+    const formatted = formatNumber(result);
+
+    // Save calculation to history
+    saveCalculation(
+      "Scientific Calculator",
+      `${expression} [${angleMode}]`,
+      formatted
+    );
+
+    setInput(formatted);
+    setLastAnswer(result);
+    setError("");
+  } catch (err) {
+    setInput("Error");
+    setError(err.message || "Calculation error");
+  }
+};
+
 
   const clearAll = () => {
     setInput("");

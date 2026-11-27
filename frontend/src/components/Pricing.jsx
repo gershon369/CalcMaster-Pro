@@ -15,7 +15,7 @@ const plans = [
   },
   {
     name: "Pro",
-    price: "$9",
+    price: "$10",
     period: "/month",
     description: "Unlock more powerful calculation tools.",
     features: [
@@ -29,7 +29,7 @@ const plans = [
   },
   {
     name: "Enterprise",
-    price: "$29",
+    price: "$30",
     period: "/month",
     description: "For advanced professional requirements.",
     features: [

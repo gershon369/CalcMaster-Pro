@@ -5,17 +5,26 @@
    GLOBAL SETTINGS
 ================================= */
 
-body {
-  margin: 0;
+* {
+  box-sizing: border-box;
 }
 
-/* =================================
-   SMOOTH NAVBAR SCROLLING
-================================= */
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  background: #080611;
+}
 
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 90px;
+}
+
+body {
+  overflow-x: hidden;
 }
 
 /* =================================
@@ -73,8 +82,6 @@ html {
   animation: calculatorFloat 12s ease-in-out infinite;
 }
 
-/* Calculator Top */
-
 .calc-top {
   display: flex;
   gap: 4px;
@@ -88,16 +95,12 @@ html {
   background: #c084fc;
 }
 
-/* Calculator Screen */
-
 .calc-screen {
   padding: 7px 4px;
   margin-bottom: 6px;
   border-radius: 5px;
-
   background: #0b0715;
   color: #d8b4fe;
-
   text-align: right;
   font-size: 10px;
   font-family: monospace;
@@ -105,8 +108,6 @@ html {
   box-shadow:
     inset 0 0 8px rgba(168,85,247,0.3);
 }
-
-/* Calculator Buttons */
 
 .calc-buttons {
   display: grid;
@@ -117,13 +118,10 @@ html {
 .calc-buttons span {
   display: grid;
   place-items: center;
-
   height: 11px;
   border-radius: 3px;
-
   background: rgba(196, 181, 253, 0.16);
   color: #eee5ff;
-
   font-size: 6px;
 }
 
@@ -133,7 +131,7 @@ html {
 }
 
 /* =================================
-   DESKTOP CALCULATOR POSITIONS
+   CALCULATOR POSITIONS
 ================================= */
 
 .calc-one {
@@ -185,7 +183,7 @@ html {
 }
 
 /* =================================
-   CALCULATOR FLOAT ANIMATION
+   CALCULATOR ANIMATION
 ================================= */
 
 @keyframes calculatorFloat {
@@ -207,16 +205,14 @@ html {
 }
 
 /* =================================
-   FLOATING MATHEMATICAL SYMBOLS
+   MATHEMATICAL SYMBOLS
 ================================= */
 
 .math-symbol {
   position: absolute;
-
   color: #c084fc;
   font-size: 35px;
   font-weight: 800;
-
   opacity: 0.30;
 
   text-shadow:
@@ -265,7 +261,7 @@ html {
 }
 
 /* =================================
-   KEEP WEBSITE CONTENT ABOVE EFFECTS
+   HOME CONTENT LAYER
 ================================= */
 
 .home-animated-bg > .relative {
@@ -274,11 +270,40 @@ html {
 }
 
 /* =================================
-   MOBILE RESPONSIVE ANIMATION
+   ROYAL BACKGROUND ANIMATION
+================================= */
+
+@keyframes royalBackground {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* =================================
+   HIDDEN SCROLLBAR
+   SCROLLING STILL WORKS
+================================= */
+
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* =================================
+   MOBILE RESPONSIVE
 ================================= */
 
 @media (max-width: 640px) {
-
   .floating-calculator {
     width: 58px;
     padding: 5px;
@@ -332,25 +357,10 @@ html {
 }
 
 /* =================================
-   ROYAL BACKGROUND ANIMATION
-================================= */
-
-@keyframes royalBackground {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-/* =================================
    REDUCE MOTION ACCESSIBILITY
 ================================= */
 
 @media (prefers-reduced-motion: reduce) {
-
   html {
     scroll-behavior: auto;
   }

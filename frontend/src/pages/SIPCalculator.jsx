@@ -1,6 +1,7 @@
 
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { saveCalculation } from "../utils/saveCalculation";
 
 const currency = (value) =>
   new Intl.NumberFormat("en-IN", {
@@ -16,6 +17,7 @@ export default function SIPCalculator() {
   const [stepUp, setStepUp] = useState("0");
 
   const [showReport, setShowReport] = useState(true);
+  const [historyMessage, setHistoryMessage] = useState("");
 
   const results = useMemo(() => {
     const investment = Number(monthlyInvestment);
@@ -28,6 +30,10 @@ export default function SIPCalculator() {
       !Number.isFinite(rate) ||
       !Number.isFinite(years) ||
       !Number.isFinite(increase) ||
+      monthlyInvestment.trim() === "" ||
+      annualReturn.trim() === "" ||
+      duration.trim() === "" ||
+      stepUp.trim() === "" ||
       investment <= 0 ||
       rate < 0 ||
       rate > 100 ||
@@ -58,7 +64,6 @@ export default function SIPCalculator() {
         currentMonthlyInvestment *= 1 + increase / 100;
       }
 
-      // Monthly compounding with end-of-month SIP deposits.
       balance = balance * (1 + monthlyRate) + currentMonthlyInvestment;
       totalInvested += currentMonthlyInvestment;
 
@@ -85,6 +90,28 @@ export default function SIPCalculator() {
     setAnnualReturn("12");
     setDuration("10");
     setStepUp("0");
+    setHistoryMessage("");
+  };
+
+  const handleSaveHistory = () => {
+    if (!results) {
+      setHistoryMessage("Please enter valid investment details.");
+      return;
+    }
+
+    const expression =
+      `Monthly Investment: ${currency(Number(monthlyInvestment))} | ` +
+      `Annual Return: ${annualReturn}% | ` +
+      `Duration: ${duration} Years | ` +
+      `Step-up: ${stepUp}%`;
+
+    saveCalculation(
+      "SIP Calculator",
+      expression,
+      currency(results.futureValue)
+    );
+
+    setHistoryMessage("Calculation saved to history successfully!");
   };
 
   const chartData = results?.yearlyData || [];
@@ -118,15 +145,8 @@ export default function SIPCalculator() {
   const inputClass =
     "mt-2 w-full rounded-xl border border-white/10 bg-[#080817] px-4 py-3 text-white outline-none transition focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20";
 
-  const formatCompact = (value) =>
-    new Intl.NumberFormat("en-IN", {
-      notation: "compact",
-      maximumFractionDigits: 1,
-    }).format(value);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#080817] via-[#111126] to-[#241044] px-4 py-8 text-white sm:px-6">
-
       <div className="mx-auto max-w-7xl">
 
         {/* Navigation */}
@@ -170,7 +190,6 @@ export default function SIPCalculator() {
 
             <div className="mb-7 flex items-center justify-between">
               <h2 className="text-xl font-bold">Investment Details</h2>
-
               <span className="text-2xl">📈</span>
             </div>
 
@@ -184,7 +203,10 @@ export default function SIPCalculator() {
                 type="number"
                 min="1"
                 value={monthlyInvestment}
-                onChange={(e) => setMonthlyInvestment(e.target.value)}
+                onChange={(e) => {
+                  setMonthlyInvestment(e.target.value);
+                  setHistoryMessage("");
+                }}
                 className={inputClass}
                 placeholder="Enter monthly investment"
               />
@@ -207,8 +229,15 @@ export default function SIPCalculator() {
                 min="0"
                 max="30"
                 step="0.5"
-                value={annualReturn === "" ? 0 : Math.min(30, Number(annualReturn))}
-                onChange={(e) => setAnnualReturn(e.target.value)}
+                value={
+                  annualReturn === ""
+                    ? 0
+                    : Math.min(30, Math.max(0, Number(annualReturn) || 0))
+                }
+                onChange={(e) => {
+                  setAnnualReturn(e.target.value);
+                  setHistoryMessage("");
+                }}
                 className="mt-4 w-full accent-purple-500"
               />
 
@@ -218,7 +247,10 @@ export default function SIPCalculator() {
                 max="100"
                 step="0.5"
                 value={annualReturn}
-                onChange={(e) => setAnnualReturn(e.target.value)}
+                onChange={(e) => {
+                  setAnnualReturn(e.target.value);
+                  setHistoryMessage("");
+                }}
                 className={inputClass}
               />
             </div>
@@ -239,8 +271,15 @@ export default function SIPCalculator() {
                 type="range"
                 min="1"
                 max="40"
-                value={duration === "" ? 1 : Math.min(40, Number(duration))}
-                onChange={(e) => setDuration(e.target.value)}
+                value={
+                  duration === ""
+                    ? 1
+                    : Math.min(40, Math.max(1, Number(duration) || 1))
+                }
+                onChange={(e) => {
+                  setDuration(e.target.value);
+                  setHistoryMessage("");
+                }}
                 className="mt-4 w-full accent-purple-500"
               />
 
@@ -249,7 +288,10 @@ export default function SIPCalculator() {
                 min="1"
                 max="50"
                 value={duration}
-                onChange={(e) => setDuration(e.target.value)}
+                onChange={(e) => {
+                  setDuration(e.target.value);
+                  setHistoryMessage("");
+                }}
                 className={inputClass}
               />
             </div>
@@ -270,8 +312,15 @@ export default function SIPCalculator() {
                 type="range"
                 min="0"
                 max="30"
-                value={stepUp === "" ? 0 : Math.min(30, Number(stepUp))}
-                onChange={(e) => setStepUp(e.target.value)}
+                value={
+                  stepUp === ""
+                    ? 0
+                    : Math.min(30, Math.max(0, Number(stepUp) || 0))
+                }
+                onChange={(e) => {
+                  setStepUp(e.target.value);
+                  setHistoryMessage("");
+                }}
                 className="mt-4 w-full accent-blue-500"
               />
 
@@ -280,7 +329,10 @@ export default function SIPCalculator() {
                 min="0"
                 max="100"
                 value={stepUp}
-                onChange={(e) => setStepUp(e.target.value)}
+                onChange={(e) => {
+                  setStepUp(e.target.value);
+                  setHistoryMessage("");
+                }}
                 className={inputClass}
               />
 
@@ -321,6 +373,29 @@ export default function SIPCalculator() {
               <p className="mt-3 text-xs text-slate-400">
                 Estimated value at the end of your investment period.
               </p>
+
+              <button
+                type="button"
+                onClick={handleSaveHistory}
+                disabled={!results}
+                className="mt-6 w-full rounded-xl border border-purple-300/20 bg-purple-500/20 py-3 font-semibold text-purple-200 transition hover:bg-purple-500/30 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <span className="mr-2">📚</span>
+                Save Calculation to History
+              </button>
+
+              {historyMessage && (
+                <p
+                  className={`mt-3 text-center text-xs ${
+                    historyMessage.includes("successfully")
+                      ? "text-emerald-400"
+                      : "text-red-400"
+                  }`}
+                  role="status"
+                >
+                  {historyMessage}
+                </p>
+              )}
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

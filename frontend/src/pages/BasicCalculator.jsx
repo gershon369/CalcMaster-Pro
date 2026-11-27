@@ -1,6 +1,7 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
+import { saveCalculation } from "../utils/saveCalculation";
 
 export default function BasicCalculator() {
   const [display, setDisplay] = useState("0");
@@ -86,13 +87,34 @@ export default function BasicCalculator() {
   const calculateResult = () => {
     if (operator === null || storedValue === null) return;
 
+    const first = storedValue;
+    const second = Number(display);
+    const selectedOperator = operator;
+
     const result = performCalculation(
-      storedValue,
-      Number(display),
-      operator
+      first,
+      second,
+      selectedOperator
     );
 
-    setDisplay(result === null ? "Error" : formatResult(result));
+    if (result === null) {
+      setDisplay("Error");
+      setStoredValue(null);
+      setOperator(null);
+      setWaitingForOperand(true);
+      return;
+    }
+
+    const formattedResult = formatResult(result);
+
+    // Save successful calculation to history
+    saveCalculation(
+      "Basic Calculator",
+      `${first} ${selectedOperator} ${second}`,
+      formattedResult
+    );
+
+    setDisplay(formattedResult);
     setStoredValue(null);
     setOperator(null);
     setWaitingForOperand(true);
@@ -110,7 +132,17 @@ export default function BasicCalculator() {
 
   const calculatePercentage = () => {
     if (display !== "Error") {
-      setDisplay(formatResult(Number(display) / 100));
+      const originalValue = Number(display);
+      const result = originalValue / 100;
+      const formattedResult = formatResult(result);
+
+      saveCalculation(
+        "Basic Calculator",
+        `${originalValue} %`,
+        formattedResult
+      );
+
+      setDisplay(formattedResult);
       setWaitingForOperand(true);
     }
   };
@@ -129,9 +161,7 @@ export default function BasicCalculator() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#080817] via-[#111126] to-[#1b1035] px-4 py-8 text-white">
-
       <div className="mx-auto max-w-md">
-
         <Link
           to="/"
           className="inline-flex items-center gap-2 text-sm text-purple-300 hover:text-white mb-8"
@@ -154,9 +184,7 @@ export default function BasicCalculator() {
         </div>
 
         <div className="rounded-3xl border border-purple-400/20 bg-[#111126]/90 p-5 shadow-[0_0_40px_rgba(124,58,237,0.15)]">
-
           <div className="mb-5 flex min-h-28 flex-col items-end justify-end overflow-hidden rounded-2xl border border-white/10 bg-black/40 p-5">
-
             <p className="mb-2 text-sm text-slate-400">
               {storedValue !== null && operator
                 ? String(storedValue) + " " + operator
@@ -166,11 +194,9 @@ export default function BasicCalculator() {
             <p className="w-full overflow-hidden text-right text-4xl font-bold text-white">
               {display}
             </p>
-
           </div>
 
           <div className="grid grid-cols-4 gap-3">
-
             <button onClick={clearCalculator} className={actionButton}>
               AC
             </button>
@@ -211,15 +237,12 @@ export default function BasicCalculator() {
 
             <button onClick={inputDecimal} className={numberButton}>.</button>
             <button onClick={calculateResult} className={equalButton}>=</button>
-
           </div>
-
         </div>
 
         <p className="mt-5 text-center text-xs text-slate-500">
           Free Calculator · CalcMaster Pro
         </p>
-
       </div>
     </div>
   );

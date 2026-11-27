@@ -1,3 +1,4 @@
+
 import {
   FaUserEdit,
   FaHistory,
@@ -23,12 +24,16 @@ export default function QuickActions() {
     navigate("/login");
   };
 
+  const actionClass =
+    "flex min-h-[64px] w-full items-center gap-3 rounded-2xl bg-white/10 px-4 py-4 text-left text-sm font-medium text-white transition hover:bg-white/20";
+
   return (
-    <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-7 shadow-xl">
+    <div className="h-full rounded-3xl border border-white/10 bg-white/5 p-7 shadow-xl backdrop-blur-xl">
 
-      <div className="flex items-center gap-3 mb-8">
+      {/* Header */}
+      <div className="mb-8 flex items-center gap-3">
 
-        <div className="w-10 h-10 rounded-xl bg-purple-600 flex items-center justify-center">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-600">
           ⚡
         </div>
 
@@ -38,63 +43,66 @@ export default function QuickActions() {
 
       </div>
 
-      <div className="grid gap-4">
+      {/* Two Column Actions */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
 
         <button
-  onClick={() => setEditOpen(true)}
-  className="flex items-center gap-4 bg-white/10 hover:bg-white/20 rounded-2xl p-4 transition"
->
-  <FaUserEdit className="text-blue-400 text-xl" />
-  Edit Profile
-</button>
+          onClick={() => setEditOpen(true)}
+          className={actionClass}
+        >
+          <FaUserEdit className="shrink-0 text-xl text-blue-400" />
+          Edit Profile
+        </button>
 
-        <button className="flex items-center gap-4 bg-white/10 hover:bg-white/20 rounded-2xl p-4 transition">
-          <FaHistory className="text-green-400 text-xl" />
+        <button className={actionClass}>
+          <FaHistory className="shrink-0 text-xl text-green-400" />
           History
         </button>
 
-        <button className="flex items-center gap-4 bg-white/10 hover:bg-white/20 rounded-2xl p-4 transition">
-          <FaHeart className="text-red-400 text-xl" />
+        <button className={actionClass}>
+          <FaHeart className="shrink-0 text-xl text-red-400" />
           Favorites
         </button>
 
         <Link
           to="/settings"
-          className="flex items-center gap-4 bg-white/10 hover:bg-white/20 rounded-2xl p-4 transition"
+          className={actionClass}
         >
-          <FaCog className="text-purple-400 text-xl" />
+          <FaCog className="shrink-0 text-xl text-purple-400" />
           Settings
         </Link>
 
-        <button className="flex items-center gap-4 bg-white/10 hover:bg-white/20 rounded-2xl p-4 transition">
-          <FaShieldAlt className="text-yellow-400 text-xl" />
+        <button className={actionClass}>
+          <FaShieldAlt className="shrink-0 text-xl text-yellow-400" />
           Security
         </button>
 
-        <button className="flex items-center gap-4 bg-white/10 hover:bg-white/20 rounded-2xl p-4 transition">
-          <FaDownload className="text-cyan-400 text-xl" />
+        <button className={actionClass}>
+          <FaDownload className="shrink-0 text-xl text-cyan-400" />
           Export Data
         </button>
 
-        <button className="flex items-center gap-4 bg-white/10 hover:bg-white/20 rounded-2xl p-4 transition">
-          <FaMoon className="text-indigo-400 text-xl" />
+        <button className={actionClass}>
+          <FaMoon className="shrink-0 text-xl text-indigo-400" />
           Dark Mode
         </button>
 
         <button
           onClick={handleLogout}
-          className="flex items-center gap-4 bg-red-600 hover:bg-red-700 rounded-2xl p-4 transition"
+          className="flex min-h-[64px] w-full items-center gap-3 rounded-2xl bg-red-600 px-4 py-4 text-left text-sm font-semibold text-white transition hover:bg-red-700"
         >
-          <FaSignOutAlt className="text-white text-xl" />
+          <FaSignOutAlt className="shrink-0 text-xl" />
           Logout
         </button>
 
       </div>
-<EditProfileModal
-  isOpen={editOpen}
-  onClose={() => setEditOpen(false)}
-/>
+
+      {/* Edit Profile Modal */}
+      <EditProfileModal
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+      />
+
     </div>
-    
   );
 }

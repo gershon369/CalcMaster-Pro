@@ -1,6 +1,7 @@
 
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { saveCalculation } from "../utils/saveCalculation";
 
 const initialValues = {
   currentAge: "25",
@@ -109,7 +110,12 @@ function GrowthChart({ data, target }) {
         </span>
       </div>
 
-      <svg viewBox={`0 0 ${width} ${height}`} className="w-full" role="img" aria-label="Retirement savings growth chart">
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        className="w-full"
+        role="img"
+        aria-label="Retirement savings growth chart"
+      >
         {[0, 1, 2, 3, 4].map((line) => {
           const lineY = padding + (line / 4) * (height - padding * 2);
           return (
@@ -158,7 +164,13 @@ function GrowthChart({ data, target }) {
         <text x={padding} y={height - 8} fill="#94a3b8" fontSize="12">
           Age {data[0]?.age}
         </text>
-        <text x={width - padding} y={height - 8} fill="#94a3b8" fontSize="12" textAnchor="end">
+        <text
+          x={width - padding}
+          y={height - 8}
+          fill="#94a3b8"
+          fontSize="12"
+          textAnchor="end"
+        >
           Age {data[data.length - 1]?.age}
         </text>
       </svg>
@@ -174,9 +186,11 @@ function GrowthChart({ data, target }) {
 export default function RetirementCalculator() {
   const [values, setValues] = useState(initialValues);
   const [showReport, setShowReport] = useState(true);
+  const [saved, setSaved] = useState(false);
 
   const update = (key, value) => {
     setValues((prev) => ({ ...prev, [key]: value }));
+    setSaved(false);
   };
 
   const currentAge = Number(values.currentAge);
@@ -240,8 +254,6 @@ export default function RetirementCalculator() {
       monthlyExpenses *
       Math.pow(1 + inflation / 100, yearsToRetirement);
 
-    // Required corpus: present value of inflation-adjusted
-    // monthly retirement expenses.
     let requiredCorpus = 0;
     let futureMonthlyExpense = monthlyExpenseAtRetirement;
 
@@ -255,7 +267,6 @@ export default function RetirementCalculator() {
         Math.pow(1 + postMonthlyRate, month);
     }
 
-    // Future value of current savings and monthly investments.
     let projectedSavings = currentSavings;
     let investedAmount = currentSavings;
     let monthlyContribution = monthlyInvestment;
@@ -274,7 +285,6 @@ export default function RetirementCalculator() {
 
       investedAmount += monthlyContribution;
 
-      // Increase monthly contribution after every 12 months.
       if (month % 12 === 0 && stepUp > 0) {
         monthlyContribution *= 1 + stepUp / 100;
       }
@@ -320,9 +330,22 @@ export default function RetirementCalculator() {
     stepUp,
   ]);
 
+  const handleSave = () => {
+    if (!result || !valid || saved) return;
+
+    saveCalculation(
+      "Retirement Calculator",
+      "Retirement estimate (personal inputs not stored)",
+      `Projected Savings: ${formatMoney(result.projectedSavings)} | Required Corpus: ${formatMoney(result.requiredCorpus)} | Funding: ${result.fundedPercent.toFixed(1)}%`
+    );
+
+    setSaved(true);
+  };
+
   const reset = () => {
     setValues(initialValues);
     setShowReport(true);
+    setSaved(false);
   };
 
   return (
@@ -384,76 +407,16 @@ export default function RetirementCalculator() {
           </div>
 
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            <InputField
-              label="Current Age"
-              value={values.currentAge}
-              onChange={(v) => update("currentAge", v)}
-              suffix="Years"
-              min={1}
-              max={100}
-            />
-            <InputField
-              label="Retirement Age"
-              value={values.retirementAge}
-              onChange={(v) => update("retirementAge", v)}
-              suffix="Years"
-              min={2}
-              max={100}
-            />
-            <InputField
-              label="Life Expectancy"
-              value={values.lifeExpectancy}
-              onChange={(v) => update("lifeExpectancy", v)}
-              suffix="Years"
-              min={3}
-              max={120}
-            />
-            <InputField
-              label="Current Monthly Expenses"
-              value={values.monthlyExpenses}
-              onChange={(v) => update("monthlyExpenses", v)}
-              suffix="INR"
-            />
-            <InputField
-              label="Current Savings"
-              value={values.currentSavings}
-              onChange={(v) => update("currentSavings", v)}
-              suffix="INR"
-            />
-            <InputField
-              label="Monthly Investment"
-              value={values.monthlyInvestment}
-              onChange={(v) => update("monthlyInvestment", v)}
-              suffix="INR"
-            />
-            <InputField
-              label="Expected Annual Return Before Retirement"
-              value={values.preReturn}
-              onChange={(v) => update("preReturn", v)}
-              suffix="%"
-              max={30}
-            />
-            <InputField
-              label="Expected Annual Return After Retirement"
-              value={values.postReturn}
-              onChange={(v) => update("postReturn", v)}
-              suffix="%"
-              max={30}
-            />
-            <InputField
-              label="Annual Inflation Rate"
-              value={values.inflation}
-              onChange={(v) => update("inflation", v)}
-              suffix="%"
-              max={20}
-            />
-            <InputField
-              label="Annual Investment Step-up"
-              value={values.stepUp}
-              onChange={(v) => update("stepUp", v)}
-              suffix="%"
-              max={100}
-            />
+            <InputField label="Current Age" value={values.currentAge} onChange={(v) => update("currentAge", v)} suffix="Years" min={1} max={100} />
+            <InputField label="Retirement Age" value={values.retirementAge} onChange={(v) => update("retirementAge", v)} suffix="Years" min={2} max={100} />
+            <InputField label="Life Expectancy" value={values.lifeExpectancy} onChange={(v) => update("lifeExpectancy", v)} suffix="Years" min={3} max={120} />
+            <InputField label="Current Monthly Expenses" value={values.monthlyExpenses} onChange={(v) => update("monthlyExpenses", v)} suffix="INR" />
+            <InputField label="Current Savings" value={values.currentSavings} onChange={(v) => update("currentSavings", v)} suffix="INR" />
+            <InputField label="Monthly Investment" value={values.monthlyInvestment} onChange={(v) => update("monthlyInvestment", v)} suffix="INR" />
+            <InputField label="Expected Annual Return Before Retirement" value={values.preReturn} onChange={(v) => update("preReturn", v)} suffix="%" max={30} />
+            <InputField label="Expected Annual Return After Retirement" value={values.postReturn} onChange={(v) => update("postReturn", v)} suffix="%" max={30} />
+            <InputField label="Annual Inflation Rate" value={values.inflation} onChange={(v) => update("inflation", v)} suffix="%" max={20} />
+            <InputField label="Annual Investment Step-up" value={values.stepUp} onChange={(v) => update("stepUp", v)} suffix="%" max={100} />
           </div>
 
           <div className="mt-6 rounded-xl border border-purple-500/20 bg-purple-500/5 p-4">
@@ -487,41 +450,36 @@ export default function RetirementCalculator() {
                   Estimated results based on your entered assumptions.
                 </p>
               </div>
-              <button
-                onClick={() => setShowReport(!showReport)}
-                className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300 hover:border-purple-500"
-              >
-                {showReport ? "Hide Report" : "Show Report"}
-              </button>
+
+              <div className="flex flex-wrap gap-3">
+                <button
+                  onClick={handleSave}
+                  disabled={saved}
+                  className={`rounded-xl border px-4 py-2 text-sm font-semibold transition ${
+                    saved
+                      ? "cursor-not-allowed border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+                      : "border-purple-500/30 bg-purple-500/10 text-purple-300 hover:bg-purple-500/20"
+                  }`}
+                >
+                  {saved ? "✓ Saved to History" : "＋ Save to History"}
+                </button>
+
+                <button
+                  onClick={() => setShowReport(!showReport)}
+                  className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300 hover:border-purple-500"
+                >
+                  {showReport ? "Hide Report" : "Show Report"}
+                </button>
+              </div>
             </div>
 
             {showReport && (
               <>
                 <div className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                  <ResultCard
-                    title="Required Retirement Corpus"
-                    value={formatCompact(result.requiredCorpus)}
-                    description="Estimated amount needed at retirement"
-                    color="purple"
-                  />
-                  <ResultCard
-                    title="Projected Savings"
-                    value={formatCompact(result.projectedSavings)}
-                    description="Estimated savings at retirement"
-                    color="blue"
-                  />
-                  <ResultCard
-                    title="Total Invested"
-                    value={formatCompact(result.investedAmount)}
-                    description="Current savings + future contributions"
-                    color="green"
-                  />
-                  <ResultCard
-                    title="Estimated Returns"
-                    value={formatCompact(result.estimatedReturns)}
-                    description="Projected growth on invested amounts"
-                    color="purple"
-                  />
+                  <ResultCard title="Required Retirement Corpus" value={formatCompact(result.requiredCorpus)} description="Estimated amount needed at retirement" color="purple" />
+                  <ResultCard title="Projected Savings" value={formatCompact(result.projectedSavings)} description="Estimated savings at retirement" color="blue" />
+                  <ResultCard title="Total Invested" value={formatCompact(result.investedAmount)} description="Current savings + future contributions" color="green" />
+                  <ResultCard title="Estimated Returns" value={formatCompact(result.estimatedReturns)} description="Projected growth on invested amounts" color="purple" />
                 </div>
 
                 <div className="mb-8 grid gap-6 lg:grid-cols-2">
@@ -545,17 +503,13 @@ export default function RetirementCalculator() {
                     <div className="h-4 overflow-hidden rounded-full bg-white/10">
                       <div
                         className="h-full rounded-full bg-gradient-to-r from-purple-600 to-blue-500"
-                        style={{
-                          width: `${Math.min(100, result.fundedPercent)}%`,
-                        }}
+                        style={{ width: `${Math.min(100, result.fundedPercent)}%` }}
                       />
                     </div>
 
                     <div className="mt-5 rounded-2xl border border-white/10 bg-[#0b1020] p-4">
                       <p className="text-sm text-slate-400">
-                        {result.difference >= 0
-                          ? "Estimated Surplus"
-                          : "Estimated Shortfall"}
+                        {result.difference >= 0 ? "Estimated Surplus" : "Estimated Shortfall"}
                       </p>
                       <h3 className={`mt-2 text-2xl font-bold ${result.difference >= 0 ? "text-emerald-300" : "text-red-300"}`}>
                         {formatCompact(Math.abs(result.difference))}
@@ -596,10 +550,7 @@ export default function RetirementCalculator() {
                   <p className="mb-5 text-sm text-slate-400">
                     Illustrative growth of projected savings until retirement.
                   </p>
-                  <GrowthChart
-                    data={result.growthData}
-                    target={result.requiredCorpus}
-                  />
+                  <GrowthChart data={result.growthData} target={result.requiredCorpus} />
                 </div>
 
                 <div className="mb-8 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04]">

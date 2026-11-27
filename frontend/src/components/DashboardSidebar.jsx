@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+
+import { NavLink } from "react-router-dom";
 import {
   FaHome,
   FaCalculator,
@@ -9,81 +10,79 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 
+const menuItems = [
+  { name: "Dashboard", path: "/dashboard", icon: FaHome },
+  { name: "Calculators", path: "/calculators", icon: FaCalculator },
+  { name: "History", path: "/history", icon: FaHistory },
+  { name: "Favorites", path: "/favorites", icon: FaHeart },
+  { name: "AI Assistant", path: "/ai", icon: FaRobot },
+  { name: "Settings", path: "/settings", icon: FaCog },
+];
+
 export default function DashboardSidebar() {
   return (
-    <div
-      className="
-      w-64
-      min-h-screen
-      bg-black/50
+    <aside className="
+      fixed left-0 top-0 z-50
+      flex h-screen w-64 shrink-0 flex-col
+      overflow-hidden
+      border-r border-purple-500/20
+      bg-[#100b20]/95
+      p-5 text-white
       backdrop-blur-xl
-      border-r
-      border-white/10
-      p-5
-      "
-    >
-      <h2 className="text-2xl font-bold text-purple-400 mb-8">
-        CalcMaster Pro
-      </h2>
+    ">
+      {/* BRAND */}
+      <div className="mb-10 shrink-0">
+        <h2 className="text-2xl font-bold tracking-tight text-purple-400">
+          CalcMaster Pro
+        </h2>
+        <p className="mt-1 text-xs text-gray-500">
+          Smart Calculation Platform
+        </p>
+      </div>
 
-      <div className="space-y-2">
+      {/* NAVIGATION */}
+      <nav className="flex-1 space-y-2">
+        {menuItems.map((item) => {
+          const Icon = item.icon;
 
-        <Link
-          to="/dashboard"
-          className="flex items-center gap-3 p-3 rounded-xl text-white hover:bg-white/10"
-        >
-          <FaHome />
-          Dashboard
-        </Link>
+          return (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({ isActive }) => `
+                flex items-center gap-3
+                rounded-xl px-4 py-3
+                text-sm font-medium
+                transition-all duration-200
+                ${
+                  isActive
+                    ? "border border-purple-400/20 bg-gradient-to-r from-purple-700/40 to-violet-600/20 text-purple-200 shadow-lg shadow-purple-950/20"
+                    : "text-gray-400 hover:bg-white/5 hover:text-white"
+                }
+              `}
+            >
+              <Icon className="text-lg" />
+              {item.name}
+            </NavLink>
+          );
+        })}
+      </nav>
 
-        <Link
-          to="/calculators"
-          className="flex items-center gap-3 p-3 rounded-xl text-white hover:bg-white/10"
-        >
-          <FaCalculator />
-          Calculators
-        </Link>
-
-        <Link
-          to="/history"
-          className="flex items-center gap-3 p-3 rounded-xl text-white hover:bg-white/10"
-        >
-          <FaHistory />
-          History
-        </Link>
-
-        <Link
-          to="/favorites"
-          className="flex items-center gap-3 p-3 rounded-xl text-white hover:bg-white/10"
-        >
-          <FaHeart />
-          Favorites
-        </Link>
-
-        <Link
-          to="/ai"
-          className="flex items-center gap-3 p-3 rounded-xl text-white hover:bg-white/10"
-        >
-          <FaRobot />
-          AI Assistant
-        </Link>
-
-        <Link
-          to="/settings"
-          className="flex items-center gap-3 p-3 rounded-xl text-white hover:bg-white/10"
-        >
-          <FaCog />
-          Settings
-        </Link>
-
+      {/* LOGOUT */}
+      <div className="shrink-0 border-t border-white/10 pt-5">
         <button
-          className="w-full flex items-center gap-3 p-3 rounded-xl text-red-400 hover:bg-white/10"
+          type="button"
+          className="
+            flex w-full items-center gap-3
+            rounded-xl px-4 py-3
+            text-sm font-medium text-red-400
+            transition hover:bg-red-500/10
+          "
         >
-          <FaSignOutAlt />
+          <FaSignOutAlt className="text-lg" />
           Logout
         </button>
-
       </div>
-    </div>
+    </aside>
   );
 }

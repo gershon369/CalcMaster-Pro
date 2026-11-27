@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { saveCalculation } from "../utils/saveCalculation";
 
 export default function BMICalculator() {
   const [age, setAge] = useState("");
@@ -80,8 +81,17 @@ export default function BMICalculator() {
 
     const bmi = weightInKg / (heightInMeters * heightInMeters);
 
+    const formattedBMI = bmi.toFixed(2);
+
+    // Save BMI result without storing personal measurements.
+    saveCalculation(
+      "BMI Calculator",
+      "BMI calculation (measurements not stored)",
+      `BMI: ${formattedBMI}`
+    );
+
     setResult({
-      bmi: bmi.toFixed(2),
+      bmi: formattedBMI,
       age: ageValue,
       height: heightInMeters.toFixed(2),
       weight: weightInKg.toFixed(2),
@@ -189,7 +199,7 @@ export default function BMICalculator() {
               />
             </div>
 
-            {/* Weight */}
+            {/* Weight Unit */}
             <div>
               <label className={labelClass}>
                 Weight Unit

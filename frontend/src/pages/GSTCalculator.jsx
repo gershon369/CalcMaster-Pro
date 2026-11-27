@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { saveCalculation } from "../utils/saveCalculation";
 
 const gstRates = ["0", "5", "12", "18", "28", "40"];
 
@@ -11,7 +12,8 @@ const money = new Intl.NumberFormat("en-IN", {
   maximumFractionDigits: 2,
 });
 
-const roundMoney = (value) => Math.round((value + Number.EPSILON) * 100) / 100;
+const roundMoney = (value) =>
+  Math.round((value + Number.EPSILON) * 100) / 100;
 
 export default function GSTCalculator() {
   const [amount, setAmount] = useState("");
@@ -41,10 +43,13 @@ export default function GSTCalculator() {
     setResult(null);
 
     const enteredAmount = Number(amount);
-        if (gstRate === "custom" && customRate.trim() === "") {
+    const taxRate = selectedRate;
+
+    if (gstRate === "custom" && customRate.trim() === "") {
       setError("Please enter a custom GST rate.");
       return;
     }
+
     const additionalCess = Number(cessRate);
     const discountPercent = Number(discount || 0);
 
@@ -97,6 +102,7 @@ export default function GSTCalculator() {
     }
 
     const gstAmount = roundMoney(taxableValue * taxRate / 100);
+
     const cessAmount = roundMoney(
       taxableValue * additionalCess / 100
     );
@@ -114,8 +120,26 @@ export default function GSTCalculator() {
       : 0;
 
     const finalTaxableValue = roundMoney(taxableValue);
+
     const finalAmount = roundMoney(
       finalTaxableValue + gstAmount + cessAmount
+    );
+
+    const totalTax = roundMoney(gstAmount + cessAmount);
+
+    // Save successful GST calculation to history.
+    const expression =
+      `Amount: ${money.format(enteredAmount)} | ` +
+      `GST: ${taxRate}% | ` +
+      `Cess: ${additionalCess}% | ` +
+      `Discount: ${discountPercent}% | ` +
+      `${calculationType === "exclusive" ? "GST Exclusive" : "GST Inclusive"} | ` +
+      `${supplyType === "intra" ? "Intra-State" : "Inter-State"}`;
+
+    saveCalculation(
+      "GST Calculator",
+      expression,
+      money.format(finalAmount)
     );
 
     setResult({
@@ -130,7 +154,7 @@ export default function GSTCalculator() {
       cessRate: additionalCess,
       cessAmount,
       finalAmount,
-      totalTax: roundMoney(gstAmount + cessAmount),
+      totalTax,
       discountPercent,
       calculationType,
       supplyType,
